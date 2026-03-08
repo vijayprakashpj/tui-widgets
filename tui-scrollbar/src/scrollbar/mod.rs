@@ -129,6 +129,46 @@ struct ArrowLayout {
     end: Option<(u16, u16)>,
 }
 
+/// Style of the scrollbar.
+///
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct ScrollBarStyle {
+    pub track_style: Style,
+    pub thumb_style: Style,
+    pub arrow_style: Option<Style>,
+}
+
+impl ScrollBarStyle {
+    pub const fn new() -> Self {
+        ScrollBarStyle {
+            track_style: Style::new().bg(Color::DarkGray),
+            thumb_style: Style::new().fg(Color::White).bg(Color::DarkGray),
+            arrow_style: Some(Style::new().fg(Color::White).bg(Color::DarkGray)),
+        }
+    }
+
+    pub fn track_style(mut self, style: Style) -> Self {
+        self.track_style = style;
+        self
+    }
+
+    pub fn thumb_style(mut self, style: Style) -> Self {
+        self.thumb_style = style;
+        self
+    }
+
+    pub fn arrow_style(mut self, style: Style) -> Self {
+        self.arrow_style = Some(style);
+        self
+    }
+}
+
+impl Default for ScrollBarStyle {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 /// A proportional scrollbar widget with fractional thumb rendering.
 ///
 /// # Key methods
