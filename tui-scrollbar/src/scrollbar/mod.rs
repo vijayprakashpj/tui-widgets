@@ -341,6 +341,7 @@ pub struct ScrollBar {
     track_style: Style,
     thumb_style: Style,
     arrow_style: Option<Style>,
+    style: ScrollBarStyle,
     glyph_set: GlyphSet,
     arrows: ScrollBarArrows,
     track_click_behavior: TrackClickBehavior,
@@ -373,6 +374,7 @@ impl ScrollBar {
             track_style: Style::new().bg(Color::DarkGray),
             thumb_style: Style::new().fg(Color::White).bg(Color::DarkGray),
             arrow_style: Some(Style::new().fg(Color::White).bg(Color::DarkGray)),
+            style: ScrollBarStyle::default(),
             glyph_set: GlyphSet::default(),
             arrows: ScrollBarArrows::default(),
             track_click_behavior: TrackClickBehavior::Page,
@@ -555,6 +557,14 @@ impl ScrollBar {
         self
     }
 
+    /// Sets the style of the scrollbar components.
+    ///
+    /// Defaults to [`ScrollBarStyle::default()`].
+    pub const fn style(mut self, style: ScrollBarStyle) -> Self {
+        self.style = style;
+        self
+    }
+
     /// Selects the glyph set used to render the track and thumb.
     ///
     /// [`GlyphSet::symbols_for_legacy_computing`] uses [Symbols for Legacy Computing] for 1/8th
@@ -707,6 +717,12 @@ mod tests {
             .track_style(track_style)
             .thumb_style(thumb_style)
             .arrow_style(arrow_style)
+            .style(
+                ScrollBarStyle::new()
+                    .track_style(track_style)
+                    .thumb_style(thumb_style)
+                    .arrow_style(arrow_style),
+            )
             .glyph_set(glyphs.clone())
             .arrows(ScrollBarArrows::End)
             .track_click_behavior(TrackClickBehavior::JumpToClick)
@@ -719,6 +735,9 @@ mod tests {
         assert_eq!(scrollbar.track_style, track_style);
         assert_eq!(scrollbar.thumb_style, thumb_style);
         assert_eq!(scrollbar.arrow_style, Some(arrow_style));
+        assert_eq!(scrollbar.style.track_style, track_style);
+        assert_eq!(scrollbar.style.thumb_style, thumb_style);
+        assert_eq!(scrollbar.style.arrow_style, Some(arrow_style));
         assert_eq!(scrollbar.glyph_set, glyphs);
         assert_eq!(scrollbar.arrows, ScrollBarArrows::End);
         assert_eq!(
