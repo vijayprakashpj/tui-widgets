@@ -273,7 +273,9 @@ pub use crate::input::{
 };
 pub use crate::lengths::ScrollLengths;
 pub use crate::metrics::{CellFill, HitTest, ScrollMetrics, SUBCELL};
-pub use crate::scrollbar::{ScrollBar, ScrollBarArrows, ScrollBarOrientation, TrackClickBehavior};
+pub use crate::scrollbar::{
+    ScrollBar, ScrollBarArrows, ScrollBarOrientation, ScrollBarStyle, TrackClickBehavior,
+};
 
 /// Re-export of the selected crossterm version.
 ///
