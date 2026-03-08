@@ -152,19 +152,19 @@ impl ScrollBarStyle {
     }
 
     /// Sets the style applied to track glyphs.
-    pub fn track_style(mut self, style: Style) -> Self {
+    pub const fn track_style(mut self, style: Style) -> Self {
         self.track_style = style;
         self
     }
 
     /// Sets the style applied to thumb glyphs.
-    pub fn thumb_style(mut self, style: Style) -> Self {
+    pub const fn thumb_style(mut self, style: Style) -> Self {
         self.thumb_style = style;
         self
     }
 
     /// Sets the style applied to arrow glyphs.
-    pub fn arrow_style(mut self, style: Style) -> Self {
+    pub const fn arrow_style(mut self, style: Style) -> Self {
         self.arrow_style = Some(style);
         self
     }
