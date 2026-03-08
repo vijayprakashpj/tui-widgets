@@ -130,12 +130,16 @@ struct ArrowLayout {
 ///
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct ScrollBarStyle {
+    /// Style applied to track glyphs.
     pub track_style: Style,
+    /// Style applied to thumb glyphs.
     pub thumb_style: Style,
+    /// Style applied to arrow glyphs.
     pub arrow_style: Option<Style>,
 }
 
 impl ScrollBarStyle {
+    /// Creates a new scrollbar style with default colors.
     pub const fn new() -> Self {
         ScrollBarStyle {
             track_style: Style::new().bg(Color::DarkGray),
@@ -144,16 +148,19 @@ impl ScrollBarStyle {
         }
     }
 
+    /// Sets the style applied to track glyphs.
     pub fn track_style(mut self, style: Style) -> Self {
         self.track_style = style;
         self
     }
 
+    /// Sets the style applied to thumb glyphs.
     pub fn thumb_style(mut self, style: Style) -> Self {
         self.thumb_style = style;
         self
     }
 
+    /// Sets the style applied to arrow glyphs.
     pub fn arrow_style(mut self, style: Style) -> Self {
         self.arrow_style = Some(style);
         self
@@ -218,29 +225,19 @@ impl Default for ScrollBarStyle {
 /// Track glyphs use `track_style`. Thumb glyphs use `thumb_style`. Arrow endcaps use
 /// `arrow_style`, which defaults to white on dark gray.
 ///
-/// Scrollbar glyphs are terminal characters. For visible track glyphs, thumb blocks, and arrow
-/// symbols, `Style::fg` colors the glyph itself and `Style::bg` colors the cell behind it. The
-/// default [`GlyphSet::minimal`] track renders spaces, so only the track background is visible in
-/// empty track cells. Visible track glyph sets, such as [`GlyphSet::box_drawing`] and
-/// [`GlyphSet::unicode`], can use foreground color for the track line. Thumb glyphs are block
-/// characters, so `Style::fg` is usually the useful knob for thumb color; `Style::bg` still colors
-/// the rest of the cell. With partial thumb glyphs, especially on a visible line track such as
-/// [`GlyphSet::box_drawing`], that background can show at the ends of the thumb. Match the thumb
-/// background to the track background unless that contrast is intentional.
+/// You can either chain style methods directly on the `ScrollBar` or pass a custom
+/// [`ScrollBarStyle`] constructed using [`ScrollBarStyle::new()`].
 ///
 /// ```rust
 /// use ratatui_core::style::{Color, Style};
-/// use tui_scrollbar::{ScrollBar, ScrollBarArrows, ScrollLengths};
+/// use tui_scrollbar::{ScrollBar, ScrollBarOrientation, ScrollLengths, ScrollBarStyle};
 ///
-/// let lengths = ScrollLengths {
-///     content_len: 120,
-///     viewport_len: 30,
-/// };
-/// let scrollbar = ScrollBar::vertical(lengths)
-///     .arrows(ScrollBarArrows::Both)
-///     .track_style(Style::new().bg(Color::Black))
-///     .thumb_style(Style::new().fg(Color::Rgb(255, 158, 100)))
-///     .arrow_style(Style::new().fg(Color::Yellow).bg(Color::Black));
+/// const CUSTOM_STYLE: ScrollBarStyle = ScrollBarStyle::new()
+///     .track_style(Style::new().bg(Color::Blue))
+///     .thumb_style(Style::new().bg(Color::Red));
+///
+/// let lengths = ScrollLengths { content_len: 120, viewport_len: 40 };
+/// let scrollbar = ScrollBar::vertical(lengths).style(CUSTOM_STYLE);
 /// ```
 ///
 /// # State
