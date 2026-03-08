@@ -187,6 +187,7 @@
 //! - [`ScrollMetrics`]: pure math for thumb sizing and hit testing.
 //! - [`GlyphSet`]: glyph selection for track and thumb rendering.
 //! - [`ScrollBarArrows`]: arrow endcap configuration.
+//! - [`ScrollBarStyle`]: style configuration for the scrollbar.
 //!
 //! ## Enums and events
 //!

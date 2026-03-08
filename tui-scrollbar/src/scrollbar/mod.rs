@@ -133,12 +133,16 @@ struct ArrowLayout {
 ///
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct ScrollBarStyle {
+    /// Style applied to track glyphs.
     pub track_style: Style,
+    /// Style applied to thumb glyphs.
     pub thumb_style: Style,
+    /// Style applied to arrow glyphs.
     pub arrow_style: Option<Style>,
 }
 
 impl ScrollBarStyle {
+    /// Creates a new scrollbar style with default colors.
     pub const fn new() -> Self {
         ScrollBarStyle {
             track_style: Style::new().bg(Color::DarkGray),
@@ -147,16 +151,19 @@ impl ScrollBarStyle {
         }
     }
 
+    /// Sets the style applied to track glyphs.
     pub fn track_style(mut self, style: Style) -> Self {
         self.track_style = style;
         self
     }
 
+    /// Sets the style applied to thumb glyphs.
     pub fn thumb_style(mut self, style: Style) -> Self {
         self.thumb_style = style;
         self
     }
 
+    /// Sets the style applied to arrow glyphs.
     pub fn arrow_style(mut self, style: Style) -> Self {
         self.arrow_style = Some(style);
         self
@@ -199,6 +206,21 @@ impl Default for ScrollBarStyle {
 ///
 /// Track glyphs use `track_style`. Thumb glyphs use `thumb_style`. Arrow endcaps use
 /// `arrow_style`, which defaults to white on dark gray.
+///
+/// You can either chain style methods directly on the `ScrollBar` or pass a custom
+/// [`ScrollBarStyle`] constructed using [`ScrollBarStyle::new()`].
+///
+/// ```rust
+/// use ratatui_core::style::{Color, Style};
+/// use tui_scrollbar::{ScrollBar, ScrollBarOrientation, ScrollLengths, ScrollBarStyle};
+///
+/// const CUSTOM_STYLE: ScrollBarStyle = ScrollBarStyle::new()
+///     .track_style(Style::new().bg(Color::Blue))
+///     .thumb_style(Style::new().bg(Color::Red));
+///
+/// let lengths = ScrollLengths { content_len: 120, viewport_len: 40 };
+/// let scrollbar = ScrollBar::vertical(lengths).style(CUSTOM_STYLE);
+/// ```
 ///
 /// # State
 ///
