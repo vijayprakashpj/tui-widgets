@@ -335,9 +335,6 @@ pub struct ScrollBar {
     content_len: usize,
     viewport_len: usize,
     offset: usize,
-    track_style: Style,
-    thumb_style: Style,
-    arrow_style: Option<Style>,
     style: ScrollBarStyle,
     glyph_set: GlyphSet,
     arrows: ScrollBarArrows,
@@ -368,9 +365,6 @@ impl ScrollBar {
             content_len: lengths.content_len,
             viewport_len: lengths.viewport_len,
             offset: 0,
-            track_style: Style::new().bg(Color::DarkGray),
-            thumb_style: Style::new().fg(Color::White).bg(Color::DarkGray),
-            arrow_style: Some(Style::new().fg(Color::White).bg(Color::DarkGray)),
             style: ScrollBarStyle::default(),
             glyph_set: GlyphSet::default(),
             arrows: ScrollBarArrows::default(),
@@ -505,7 +499,7 @@ impl ScrollBar {
     /// let scrollbar = ScrollBar::vertical(lengths).track_style(Style::new().bg(Color::Black));
     /// ```
     pub const fn track_style(mut self, style: Style) -> Self {
-        self.track_style = style;
+        self.style = self.style.track_style(style);
         self
     }
 
@@ -528,7 +522,7 @@ impl ScrollBar {
     ///     ScrollBar::vertical(lengths).thumb_style(Style::new().fg(Color::Rgb(255, 158, 100)));
     /// ```
     pub const fn thumb_style(mut self, style: Style) -> Self {
-        self.thumb_style = style;
+        self.style = self.style.thumb_style(style);
         self
     }
 
@@ -550,7 +544,7 @@ impl ScrollBar {
     ///     .arrow_style(Style::new().fg(Color::Yellow).bg(Color::Black));
     /// ```
     pub const fn arrow_style(mut self, style: Style) -> Self {
-        self.arrow_style = Some(style);
+        self.style = self.style.arrow_style(style);
         self
     }
 
@@ -729,9 +723,6 @@ mod tests {
         assert_eq!(scrollbar.content_len, 20);
         assert_eq!(scrollbar.viewport_len, 5);
         assert_eq!(scrollbar.offset, 3);
-        assert_eq!(scrollbar.track_style, track_style);
-        assert_eq!(scrollbar.thumb_style, thumb_style);
-        assert_eq!(scrollbar.arrow_style, Some(arrow_style));
         assert_eq!(scrollbar.style.track_style, track_style);
         assert_eq!(scrollbar.style.thumb_style, thumb_style);
         assert_eq!(scrollbar.style.arrow_style, Some(arrow_style));
