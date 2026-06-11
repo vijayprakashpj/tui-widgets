@@ -22,13 +22,18 @@ use crate::prelude::*;
 // TODO handle bracketed paste.
 
 /// A prompt widget that displays a message and a text input.
-#[derive(Debug, Default, Clone, PartialEq, Eq)]
+///
+/// By default, the prompt reserves space for the [`TextState`] status symbol before the prompt
+/// message. Use [`TextPrompt::without_status_symbol`] when the surrounding UI owns completion or
+/// cancellation state and the prompt should start directly with the message.
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct TextPrompt<'a> {
     /// The message to display to the user before the input.
     message: Cow<'a, str>,
     /// The block to wrap the prompt in.
     block: Option<Block<'a>>,
     render_style: TextRenderStyle,
+    status_symbol_visible: bool,
 }
 
 #[derive(Debug, Default, Clone, Copy, PartialEq, Eq, Hash)]
@@ -57,6 +62,7 @@ impl<'a> TextPrompt<'a> {
             message,
             block: None,
             render_style: TextRenderStyle::Default,
+            status_symbol_visible: true,
         }
     }
 
@@ -70,6 +76,23 @@ impl<'a> TextPrompt<'a> {
     pub const fn with_render_style(mut self, render_style: TextRenderStyle) -> Self {
         self.render_style = render_style;
         self
+    }
+
+    /// Renders the prompt without the status symbol or its following space.
+    ///
+    /// The prompt state's [`Status`] is still updated and available through [`TextState`]. This
+    /// only changes the rendered prefix, so the prompt message, input value, wrapping width, and
+    /// cursor position all move left by the width of the hidden status symbol prefix.
+    #[must_use]
+    pub const fn without_status_symbol(mut self) -> Self {
+        self.status_symbol_visible = false;
+        self
+    }
+}
+
+impl Default for TextPrompt<'_> {
+    fn default() -> Self {
+        Self::new(Cow::Borrowed(""))
     }
 }
 
@@ -97,13 +120,18 @@ impl<'a> StatefulWidget for TextPrompt<'a> {
         let value = Span::raw(self.render_style.render(state));
         let value_width = value.width();
 
-        let line = Line::from(vec![
-            state.status().symbol(),
-            " ".into(),
-            self.message.bold(),
-            " › ".cyan().dim(),
-            value,
-        ]);
+        let line = {
+            let mut parts = vec![];
+            if self.status_symbol_visible {
+                parts.push(state.status().symbol());
+                parts.push(" ".into());
+            }
+            parts.push(self.message.bold());
+            parts.push(" › ".cyan().dim());
+            parts.push(value);
+            Line::from(parts)
+        };
+
         let prompt_width = line.width() - value_width;
         let lines = wrap(line, width).take(height).collect_vec();
 
@@ -248,6 +276,19 @@ mod tests {
     }
 
     #[test]
+    fn render_default_keeps_status_symbol() {
+        let prompt = TextPrompt::default();
+        let mut state = TextState::new().with_status(Status::Done);
+        let mut buffer = Buffer::empty(Rect::new(0, 0, 8, 1));
+
+        prompt.render(buffer.area, &mut buffer, &mut state);
+
+        let line = line!["✔".green(), " ", " › ".cyan().dim(), "   "];
+        assert_eq!(buffer, Buffer::with_lines([line]));
+        assert_eq!(state.cursor(), (5, 0));
+    }
+
+    #[test]
     fn render_emoji() {
         let prompt = TextPrompt::from("🔍");
         let mut state = TextState::new();
@@ -288,6 +329,19 @@ mod tests {
 
         let line = line!["✘".red(), " ", "prompt".bold(), " › ".cyan().dim(), "    "];
         assert_eq!(buffer, Buffer::with_lines([line]));
+    }
+
+    #[test]
+    fn render_without_status_symbol() {
+        let prompt = TextPrompt::from("prompt").without_status_symbol();
+        let mut state = TextState::new().with_status(Status::Aborted);
+        let mut buffer = Buffer::empty(Rect::new(0, 0, 13, 1));
+
+        prompt.render(buffer.area, &mut buffer, &mut state);
+
+        let line = line!["prompt".bold(), " › ".cyan().dim(), "    "];
+        assert_eq!(buffer, Buffer::with_lines([line]));
+        assert_eq!(state.cursor(), (9, 0));
     }
 
     #[test]
