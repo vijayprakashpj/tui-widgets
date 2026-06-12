@@ -2263,6 +2263,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "tui-equalizer"
+version = "0.2.0"
+dependencies = [
+ "color-eyre",
+ "crossterm 0.29.0",
+ "itertools",
+ "rand 0.10.1",
+ "ratatui",
+ "ratatui-core",
+]
+
+[[package]]
 name = "tui-popup"
 version = "0.7.5"
 dependencies = [
@@ -2341,6 +2353,7 @@ dependencies = [
  "tui-big-text",
  "tui-box-text",
  "tui-cards",
+ "tui-equalizer",
  "tui-popup",
  "tui-prompts",
  "tui-qrcode",

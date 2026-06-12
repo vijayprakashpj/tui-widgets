@@ -11,6 +11,9 @@ fmt-check:
     # Keep check mode on the same toolchain as fmt so CI and local formatting agree.
     cargo +nightly fmt --all -- --check
 
+rdme-check:
+    for manifest in Cargo.toml tui-*/Cargo.toml; do cargo rdme --check --manifest-path "$manifest"; done
+
 clippy toolchain="stable":
     cargo +{{toolchain}} clippy --all-targets --all-features --workspace -- -D warnings
 

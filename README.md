@@ -16,6 +16,7 @@ Workspace crates:
 - [tui-big-text]
 - [tui-box-text]
 - [tui-cards]
+- [tui-equalizer]
 - [tui-popup]
 - [tui-prompts]
 - [tui-qrcode]
@@ -42,6 +43,10 @@ The widget crates are also available as standalone crates.
 
 [![Demo](https://vhs.charm.sh/vhs-34mhPM1Juk2XnnLTGpOtE9.gif)][tui-cards]
 
+### [tui-equalizer]
+
+[![Demo](https://vhs.charm.sh/vhs-FiRQkkDAUEnH2BrPbUx5i.gif)][tui-equalizer]
+
 ### [tui-popup]
 
 [![Demo](https://vhs.charm.sh/vhs-q5Kz0QP3zmrBlQ6dofjMh.gif)][tui-popup]
@@ -63,6 +68,7 @@ The widget crates are also available as standalone crates.
 [tui-big-text]: https://crates.io/crates/tui-big-text
 [tui-box-text]: https://crates.io/crates/tui-box-text
 [tui-cards]: https://crates.io/crates/tui-cards
+[tui-equalizer]: https://crates.io/crates/tui-equalizer
 [tui-popup]: https://crates.io/crates/tui-popup
 [tui-prompts]: https://crates.io/crates/tui-prompts
 [tui-qrcode]: https://crates.io/crates/tui-qrcode

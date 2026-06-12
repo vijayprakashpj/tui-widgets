@@ -1,0 +1,23 @@
+[package]
+name = "tui-equalizer"
+description = "An equalizer widget for Ratatui with multiple frequency bands."
+version = "0.2.0"
+documentation = "https://docs.rs/tui-equalizer"
+
+authors.workspace = true
+categories.workspace = true
+edition.workspace = true
+keywords.workspace = true
+license.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+ratatui-core.workspace = true
+
+[dev-dependencies]
+color-eyre.workspace = true
+crossterm.workspace = true
+itertools.workspace = true
+rand.workspace = true
+ratatui = { workspace = true, default-features = true }
