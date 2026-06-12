@@ -65,6 +65,7 @@ default = [
     "big-text",
     "box-text",
     "cards",
+    "equalizer",
     "popup",
     "prompts",
     "qrcode",
@@ -79,6 +80,8 @@ big-text = ["tui-big-text"]
 box-text = ["tui-box-text"]
 ## Enables the [`cards`] widget
 cards = ["tui-cards"]
+## Enables the [`equalizer`] widget
+equalizer = ["tui-equalizer"]
 ## Enables the [`popup`] widget
 popup = ["tui-popup"]
 ## Enables the [`prompts`] widget
@@ -97,6 +100,7 @@ tui-bar-graph = { version = "0.3.3", path = "tui-bar-graph", optional = true }
 tui-big-text = { version = "0.8.5", path = "tui-big-text", optional = true }
 tui-box-text = { version = "0.3.3", path = "tui-box-text", optional = true }
 tui-cards = { version = "0.3.3", path = "tui-cards", optional = true }
+tui-equalizer = { version = "0.2.0", path = "tui-equalizer", optional = true }
 tui-popup = { version = "0.7.5", path = "tui-popup", optional = true }
 tui-prompts = { version = "0.6.4", path = "tui-prompts", optional = true }
 tui-qrcode = { version = "0.2.5", path = "tui-qrcode", optional = true }

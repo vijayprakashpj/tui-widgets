@@ -44,6 +44,7 @@ jobs:
           - tui-big-text
           - tui-box-text
           - tui-cards
+          - tui-equalizer
           - tui-popup
           - tui-prompts
           - tui-qrcode

@@ -12,6 +12,7 @@
 //! - [tui-big-text]
 //! - [tui-box-text]
 //! - [tui-cards]
+//! - [tui-equalizer]
 //! - [tui-popup]
 //! - [tui-prompts]
 //! - [tui-qrcode]
@@ -38,6 +39,10 @@
 //!
 //! [![Demo](https://vhs.charm.sh/vhs-34mhPM1Juk2XnnLTGpOtE9.gif)][tui-cards]
 //!
+//! ## [tui-equalizer]
+//!
+//! [![Demo](https://vhs.charm.sh/vhs-FiRQkkDAUEnH2BrPbUx5i.gif)][tui-equalizer]
+//!
 //! ## [tui-popup]
 //!
 //! [![Demo](https://vhs.charm.sh/vhs-q5Kz0QP3zmrBlQ6dofjMh.gif)][tui-popup]
@@ -59,6 +64,7 @@
 //! [tui-big-text]: https://crates.io/crates/tui-big-text
 //! [tui-box-text]: https://crates.io/crates/tui-box-text
 //! [tui-cards]: https://crates.io/crates/tui-cards
+//! [tui-equalizer]: https://crates.io/crates/tui-equalizer
 //! [tui-popup]: https://crates.io/crates/tui-popup
 //! [tui-prompts]: https://crates.io/crates/tui-prompts
 //! [tui-qrcode]: https://crates.io/crates/tui-qrcode
@@ -78,6 +84,9 @@ pub use tui_box_text as box_text;
 #[cfg(feature = "cards")]
 #[doc(inline)]
 pub use tui_cards as cards;
+#[cfg(feature = "equalizer")]
+#[doc(inline)]
+pub use tui_equalizer as equalizer;
 #[cfg(feature = "popup")]
 #[doc(inline)]
 pub use tui_popup as popup;

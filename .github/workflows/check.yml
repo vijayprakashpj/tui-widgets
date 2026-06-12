@@ -216,6 +216,7 @@ jobs:
           cargo rdme --check --manifest-path tui-big-text/Cargo.toml
           cargo rdme --check --manifest-path tui-box-text/Cargo.toml
           cargo rdme --check --manifest-path tui-cards/Cargo.toml
+          cargo rdme --check --manifest-path tui-equalizer/Cargo.toml
           cargo rdme --check --manifest-path tui-popup/Cargo.toml
           cargo rdme --check --manifest-path tui-prompts/Cargo.toml
           cargo rdme --check --manifest-path tui-qrcode/Cargo.toml
