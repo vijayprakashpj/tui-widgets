@@ -313,5 +313,7 @@ pub use crate::input::{
     ScrollEvent, ScrollWheel,
 };
 pub use crate::lengths::ScrollLengths;
-pub use crate::metrics::{CellFill, HitTest, SUBCELL, ScrollMetrics};
-pub use crate::scrollbar::{ScrollBar, ScrollBarArrows, ScrollBarOrientation, TrackClickBehavior};
+pub use crate::metrics::{CellFill, HitTest, ScrollMetrics, SUBCELL};
+pub use crate::scrollbar::{
+    ScrollBar, ScrollBarArrows, ScrollBarOrientation, ScrollBarStyle, TrackClickBehavior,
+};

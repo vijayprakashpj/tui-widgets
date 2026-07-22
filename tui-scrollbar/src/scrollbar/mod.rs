@@ -126,8 +126,19 @@ struct ArrowLayout {
     end: Option<(u16, u16)>,
 }
 
-/// Style of the scrollbar.
+/// Style of the scrollbar (track, thumb, and optional arrow endcaps).
 ///
+/// # Reading and updating
+///
+/// The `track_style`, `thumb_style`, and `arrow_style` fields are public, so you can read or
+/// assign them directly (including in struct update expressions).
+///
+/// Methods [`Self::track_style`], [`Self::thumb_style`], and [`Self::arrow_style`] that take a
+/// [`Style`] and return `Self` are **builders** for chained construction.
+///
+/// Use [`Self::get_track_style`], [`Self::get_thumb_style`], and [`Self::get_arrow_style`] to read
+/// by method call, and [`Self::set_track_style`], [`Self::set_thumb_style`], [`Self::set_arrow_style`],
+/// and [`Self::clear_arrow_style`] to update a `ScrollBarStyle` in place without consuming it.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct ScrollBarStyle {
     /// Style applied to track glyphs.
@@ -149,21 +160,65 @@ impl ScrollBarStyle {
     }
 
     /// Sets the style applied to track glyphs.
+    ///
+    /// For reading or in-place updates, see [`Self::get_track_style`] and [`Self::set_track_style`].
     pub const fn track_style(mut self, style: Style) -> Self {
         self.track_style = style;
         self
     }
 
     /// Sets the style applied to thumb glyphs.
+    ///
+    /// For reading or in-place updates, see [`Self::get_thumb_style`] and [`Self::set_thumb_style`].
     pub const fn thumb_style(mut self, style: Style) -> Self {
         self.thumb_style = style;
         self
     }
 
     /// Sets the style applied to arrow glyphs.
+    ///
+    /// For reading, clearing, or in-place updates, see [`Self::get_arrow_style`],
+    /// [`Self::set_arrow_style`], and [`Self::clear_arrow_style`].
     pub const fn arrow_style(mut self, style: Style) -> Self {
         self.arrow_style = Some(style);
         self
+    }
+
+    /// Returns the style applied to track glyphs.
+    pub const fn get_track_style(&self) -> Style {
+        self.track_style
+    }
+
+    /// Returns the style applied to thumb glyphs.
+    pub const fn get_thumb_style(&self) -> Style {
+        self.thumb_style
+    }
+
+    /// Returns the style applied to arrow glyphs, if set.
+    pub const fn get_arrow_style(&self) -> Option<Style> {
+        self.arrow_style
+    }
+
+    /// Sets the style applied to track glyphs in place.
+    pub const fn set_track_style(&mut self, style: Style) {
+        self.track_style = style;
+    }
+
+    /// Sets the style applied to thumb glyphs in place.
+    pub const fn set_thumb_style(&mut self, style: Style) {
+        self.thumb_style = style;
+    }
+
+    /// Sets the style applied to arrow glyphs in place.
+    ///
+    /// Pass [`None`] so arrow cells use the track style at render time (see [`crate::ScrollBar`]).
+    pub const fn set_arrow_style(&mut self, style: Option<Style>) {
+        self.arrow_style = style;
+    }
+
+    /// Clears the dedicated arrow style so arrows use the track style when rendered.
+    pub const fn clear_arrow_style(&mut self) {
+        self.arrow_style = None;
     }
 }
 
@@ -189,6 +244,7 @@ impl Default for ScrollBarStyle {
 /// - [`Self::content_len`]
 /// - [`Self::viewport_len`]
 /// - [`Self::offset`]
+/// - [`Self::styles`]
 ///
 /// ## Appearance
 ///
@@ -227,6 +283,10 @@ impl Default for ScrollBarStyle {
 ///
 /// You can either chain style methods directly on the `ScrollBar` or pass a custom
 /// [`ScrollBarStyle`] constructed using [`ScrollBarStyle::new()`].
+///
+/// The methods [`ScrollBar::track_style`], [`ScrollBar::thumb_style`], and
+/// [`ScrollBar::arrow_style`] are **builders**: they take a [`Style`] and return a new scrollbar.
+/// To read the active styles from an existing scrollbar, use [`ScrollBar::styles`].
 ///
 /// ```rust
 /// use ratatui_core::style::{Color, Style};
@@ -551,9 +611,20 @@ impl ScrollBar {
     /// Sets the style of the scrollbar components.
     ///
     /// Defaults to [`ScrollBarStyle::default()`].
+    ///
+    /// For the configured style, see [`Self::styles`].
     pub const fn style(mut self, style: ScrollBarStyle) -> Self {
         self.style = style;
         self
+    }
+
+    /// Returns the scrollbar’s configured [`ScrollBarStyle`] (track, thumb, and arrow styles).
+    ///
+    /// This is the supported way to **read** styles from a [`ScrollBar`]. Builder methods named
+    /// [`Self::track_style`], [`Self::thumb_style`], and [`Self::arrow_style`] take a [`Style`]
+    /// argument and return an updated scrollbar; they are not getters.
+    pub const fn styles(&self) -> &ScrollBarStyle {
+        &self.style
     }
 
     /// Selects the glyph set used to render the track and thumb.
@@ -723,9 +794,9 @@ mod tests {
         assert_eq!(scrollbar.content_len, 20);
         assert_eq!(scrollbar.viewport_len, 5);
         assert_eq!(scrollbar.offset, 3);
-        assert_eq!(scrollbar.style.track_style, track_style);
-        assert_eq!(scrollbar.style.thumb_style, thumb_style);
-        assert_eq!(scrollbar.style.arrow_style, Some(arrow_style));
+        assert_eq!(scrollbar.styles().track_style, track_style);
+        assert_eq!(scrollbar.styles().thumb_style, thumb_style);
+        assert_eq!(scrollbar.styles().arrow_style, Some(arrow_style));
         assert_eq!(scrollbar.glyph_set, glyphs);
         assert_eq!(scrollbar.arrows, ScrollBarArrows::End);
         assert_eq!(
@@ -733,6 +804,24 @@ mod tests {
             TrackClickBehavior::JumpToClick
         );
         assert_eq!(scrollbar.scroll_step, 1);
+    }
+
+    #[test]
+    fn scroll_bar_style_getters_and_setters() {
+        let mut style = ScrollBarStyle::new()
+            .track_style(Style::new().fg(Color::Yellow))
+            .thumb_style(Style::new().bg(Color::Cyan));
+        style.set_arrow_style(Some(Style::new().fg(Color::Magenta)));
+
+        assert_eq!(style.get_track_style(), style.track_style);
+        assert_eq!(style.get_thumb_style(), style.thumb_style);
+        assert_eq!(style.get_arrow_style(), style.arrow_style);
+
+        style.clear_arrow_style();
+        assert_eq!(style.get_arrow_style(), None);
+
+        style.set_track_style(Style::new().fg(Color::Red));
+        assert_eq!(style.get_track_style(), Style::new().fg(Color::Red));
     }
 
     #[test]
